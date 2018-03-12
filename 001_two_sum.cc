@@ -12,6 +12,7 @@
 #include "gtest/gtest.h"
 
 #include <vector>
+#include <algorithm>
 #include <set>
 
 using namespace std;
@@ -19,24 +20,26 @@ using namespace std;
 class Solution {
   public:
     vector<int> twoSum(vector<int>& nums, int target) {
-        set<int> m;
+        map<int, int> m;
 
-        for (auto it = nums.begin(); it != nums.end(); ++it) {
-            if (m.find(target - *it) != m.end()) {
-                return vector<int> {*it, target-*it};
+        for (auto i = 0; i < nums.size(); ++i) {
+            if (m.find(target - nums[i]) != m.end()) {
+                vector<int> res{i, m[target - nums[i]]};
+                sort(res.begin(), res.end());
+                return res;
             }
-            m.insert(*it);
+            m.emplace(nums[i], i);
         }
 
-        return vector<int> {};
+        return vector<int> {-1, -1};
     }
 };
 
 TEST(TwoSum, 1) {
     Solution s;
     auto v = vector<int> {1,2,7,6};
-    auto r = s.twoSum(v , 9);
+    auto r = s.twoSum(v, 9);
     EXPECT_EQ(r.size(), 2);
-    EXPECT_EQ(r[0],7);
+    EXPECT_EQ(r[0],1);
     EXPECT_EQ(r[1],2);
 }

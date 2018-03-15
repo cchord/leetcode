@@ -97,3 +97,81 @@ TEST(RecoverTree, 1) {
     s.recoverTree(&root);
     EXPECT_EQ(root.val, 2);
 }
+
+class Solution2 {
+  private:
+    TreeNode *prev, *n1, *n2;
+  public:
+    Solution2():prev(nullptr), n1(nullptr), n2(nullptr) {}
+
+  public:
+    void recoverTree(TreeNode* root) {
+        morrisInorderTraverse(root);
+        if (n1 && n2)
+            swap(n1->val, n2->val);
+    }
+
+    void morrisInorderTraverse(TreeNode* root) {
+        TreeNode *cur = root, *pred = nullptr;
+        while(cur) {
+            if (cur->left) {
+                pred = cur->left;
+                while(pred->right && pred->right != cur) {
+                    pred = pred->right;
+                }
+                if (pred->right) {
+                    pred->right = nullptr;
+
+                    if (prev && prev->val > cur->val) {
+                        if (!n1) {
+                            n1 = prev;
+                        }
+                        n2 = cur;
+                    }
+
+                    prev = cur;
+                    cur = cur->right;
+                } else {
+                    pred->right = cur;
+                    cur = cur->left;
+                }
+            } else {
+                if (prev && prev->val > cur->val) {
+                    if (!n1) {
+                        n1 = prev;
+                    }
+                    n2 = cur;
+                }
+
+                prev = cur;
+                cur = cur->right;
+            }
+        }
+    }
+};
+
+TEST(RecoverTree, 2) {
+    TreeNode root(1);
+    root.left = new TreeNode(2);
+    root.right = new TreeNode(3);
+    Solution2 s;
+    s.recoverTree(&root);
+    EXPECT_EQ(root.val, 2);
+    EXPECT_EQ(root.left->val,1);
+    EXPECT_EQ(root.right->val,3);
+
+    //root.val = 2;
+    //root.left->val = 1;
+    //root.right->val = 3;
+    //s.recoverTree(&root);
+    //EXPECT_EQ(root.val, 2);
+    //EXPECT_EQ(root.left->val,1);
+    //EXPECT_EQ(root.right->val,3);
+
+    //root.val = 2;
+    //delete(root.left);
+    //delete(root.right);
+    //root.left = root.right = nullptr;
+    //s.recoverTree(&root);
+    //EXPECT_EQ(root.val, 2);
+}

@@ -93,21 +93,13 @@ class Codec {
 // Codec codec;
 // codec.deserialize(codec.serialize(root));
 
-void prt(TreeNode *x) {
-    if(!x)
-        return;
-    prt(x->left);
-    cout << x->val;
-    prt(x->right);
-}
-
-TEST(Serialize, 1) {
-    Codec c;
-    auto root = TreeNode(0);
-    root.left = new TreeNode(1);
-    root.right = new TreeNode(2);
-    root.right->left = new TreeNode(3);
-    root.right->right = new TreeNode(4);
-    auto t = c.deserialize(c.serialize(&root));
-    prt(t);
-}
+//TEST(Serialize, 1) {
+//    Codec c;
+//    auto root = TreeNode(0);
+//    root.left = new TreeNode(1);
+//    root.right = new TreeNode(2);
+//    root.right->left = new TreeNode(3);
+//    root.right->right = new TreeNode(4);
+//    auto t = c.deserialize(c.serialize(&root));
+//    prt(t);
+//}

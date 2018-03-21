@@ -13,6 +13,9 @@
 // ]
 // Given target = 3, return true.
 
+#include "gtest/gtest.h"
+
+#include <iostream>
 #include <vector>
 
 using namespace std;
@@ -50,14 +53,25 @@ class Solution1 {
         int n = matrix[0].size();
         if (!n)
             return false;
-        auto l = 0, r = m * n;
-        while(r - l > 1) { 
-            auto mid = (l + r) >> 1;
-            if (matrix[mid/m][mid%m] < target) 
-                r = m;
-            else
-                l = m;
+        int first = 0, last = m*n, count = last - first;
+        while(count) {
+            int step = count / 2;
+            int i = first + step;
+            if (matrix[i/n][i%n] < target) {
+                first = ++i;
+                count -= step + 1;
+            } else {
+                count = step;
+            }
         }
-        return matrix[l/m][l%m] == target;
+        if (first >= last)
+            return false;
+        return matrix[first/n][first%n] == target;
     }
 };
+
+TEST(SearchMatrix, 2) {
+    Solution1 s;
+    vector<vector<int>> v{{1,1}};
+    cout << s.searchMatrix(v, 0) << endl;
+}
